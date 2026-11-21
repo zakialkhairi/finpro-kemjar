@@ -64,19 +64,30 @@ function DashboardContent() {
 
       try {
         const res = await fetch(`/api/profile?id=${encodeURIComponent(id)}`);
-        const data = await res.json();
+        const text = await res.text();
+        let data: { error?: string; user?: UserProfile } | null = null;
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          // Non-JSON response
+        }
 
-        if (!res.ok || data.error) {
+        if (!res.ok || !data || data.error) {
           if (res.status === 401) {
             router.push("/");
             return;
           }
-          setProfileError(data.error || "Gagal memuat profil.");
+          const errorMsg =
+            data?.error ||
+            (text.trim() ? text : `HTTP ${res.status}: Gagal memuat data profil.`);
+          setProfileError(errorMsg);
           setProfile(null);
           return;
         }
 
-        setProfile(data.user);
+        if (data.user) {
+          setProfile(data.user);
+        }
       } catch (err: unknown) {
         const errorMsg =
           err instanceof Error ? err.message : "Gagal menghubungi server.";
@@ -108,10 +119,19 @@ function DashboardContent() {
 
     try {
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-      const data = await res.json();
+      const text = await res.text();
+      let data: { error?: string; results?: SearchRow[] } | null = null;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        // Non-JSON response
+      }
 
-      if (!res.ok || data.error) {
-        setSearchError(data.error || "Pencarian gagal diproses.");
+      if (!res.ok || !data || data.error) {
+        setSearchError(
+          data?.error ||
+          (text.trim() ? text : `HTTP ${res.status}: Pencarian gagal diproses.`)
+        );
         setSearchResults([]);
         return;
       }

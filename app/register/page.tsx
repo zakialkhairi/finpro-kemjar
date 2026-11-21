@@ -49,10 +49,19 @@ export default function RegisterPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: { error?: string } | null = null;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        // Non-JSON response
+      }
 
-      if (!res.ok || data.error) {
-        setErrorMessage(data.error || "Gagal melakukan pendaftaran.");
+      if (!res.ok || !data || data.error) {
+        setErrorMessage(
+          data?.error ||
+          (text.trim() ? text : `HTTP ${res.status}: Gagal memproses pendaftaran.`)
+        );
         setIsLoading(false);
         return;
       }

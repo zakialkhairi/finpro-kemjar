@@ -24,10 +24,19 @@ export default function LoginPage() {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data: { error?: string; user?: { id: number } } | null = null;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        // Response was not JSON (e.g. empty serverless 500 or HTML error)
+      }
 
-      if (!res.ok || data.error) {
-        setRawError(data.error || "Gagal masuk ke sistem.");
+      if (!res.ok || !data || data.error || !data.user) {
+        const errorMsg =
+          data?.error ||
+          (text.trim() ? text : `HTTP ${res.status}: Server tidak merespons.`);
+        setRawError(errorMsg);
         setIsLoading(false);
         return;
       }

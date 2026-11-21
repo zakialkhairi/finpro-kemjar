@@ -1,5 +1,6 @@
 import Database from "better-sqlite3";
 import path from "path";
+import fs from "fs";
 
 export interface User {
   id: number;
@@ -12,7 +13,16 @@ export interface User {
   secret_note: string;
 }
 
-const dbPath = path.join(process.cwd(), "database.db");
+// In Vercel / AWS Lambda, the root directory (/var/task) is read-only.
+// Only /tmp is writable for file-based SQLite databases.
+const isVercel = Boolean(
+  process.env.VERCEL ||
+  process.env.AWS_LAMBDA_FUNCTION_NAME ||
+  process.env.NOW_REGION
+);
+
+const dbDir = isVercel ? "/tmp" : process.cwd();
+const dbPath = path.join(dbDir, "database.db");
 
 declare global {
   // eslint-disable-next-line no-var
@@ -20,10 +30,22 @@ declare global {
 }
 
 function initDb(): Database.Database {
+  if (isVercel && !fs.existsSync(dbDir)) {
+    try {
+      fs.mkdirSync(dbDir, { recursive: true });
+    } catch {
+      // Ignore directory already exists
+    }
+  }
+
   const database = new Database(dbPath);
 
-  // WAL mode for improved concurrent reads and writes
-  database.pragma("journal_mode = WAL");
+  // WAL mode for local concurrency; DELETE mode for serverless /tmp environments
+  if (!isVercel) {
+    database.pragma("journal_mode = WAL");
+  } else {
+    database.pragma("journal_mode = DELETE");
+  }
 
   // Create table users if it doesn't exist
   database.exec(`
@@ -161,5 +183,16 @@ export function getDb(): Database.Database {
   return globalThis.__sqlite_db;
 }
 
-export const db = getDb();
+// Lazy proxy so that database initialization only executes on demand
+export const db = new Proxy({} as Database.Database, {
+  get(_target, prop) {
+    const instance = getDb() as unknown as Record<string | symbol, unknown>;
+    const value = instance[prop];
+    if (typeof value === "function") {
+      return (value as Function).bind(instance);
+    }
+    return value;
+  },
+});
+
 export default db;
