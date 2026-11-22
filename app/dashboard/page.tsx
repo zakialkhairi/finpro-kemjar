@@ -82,9 +82,6 @@ function DashboardContent() {
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
-  // Quick IDOR Input State
-  const [targetIdInput, setTargetIdInput] = useState(profileId || "1");
-
   // Fetch Profile data from /api/profile?id=...
   const fetchProfile = useCallback(
     async (id: string) => {
@@ -131,7 +128,6 @@ function DashboardContent() {
 
   useEffect(() => {
     if (profileId) {
-      setTargetIdInput(profileId);
       fetchProfile(profileId);
     } else {
       setProfileError("Parameter id tidak ditemukan pada URL.");
@@ -194,14 +190,6 @@ function DashboardContent() {
     }
   };
 
-  // Switch ID directly (demonstrates IDOR)
-  const handleSwitchId = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (targetIdInput.trim()) {
-      router.push(`/dashboard?id=${encodeURIComponent(targetIdInput.trim())}`);
-    }
-  };
-
   const semGpa = parseSemesterGpas(profile?.semester_gpas);
 
   return (
@@ -252,41 +240,16 @@ function DashboardContent() {
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Profile Section Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-bold font-heading text-[#F4F4F5] flex items-center gap-2">
-              <User className="w-5 h-5 text-[#A1A1AA]" />
-              {profile?.role === "admin"
-                ? "Portal Administrasi Keamanan Jaringan"
-                : "Detail Profil Akademik Mahasiswa"}
-            </h2>
-            <p className="text-xs text-[#71717A] mt-0.5 font-mono font-mono-data">
-              Endpoint: /api/profile?id={profileId || "..."}
-            </p>
-          </div>
-
-          {/* Quick IDOR Inspector Tool */}
-          <form
-            onSubmit={handleSwitchId}
-            className="flex items-center gap-2 bg-[#141416] border border-[#27272A] p-1.5 rounded-lg"
-          >
-            <span className="text-xs font-mono font-mono-data text-[#71717A] pl-2">
-              ?id=
-            </span>
-            <input
-              type="text"
-              value={targetIdInput}
-              onChange={(e) => setTargetIdInput(e.target.value)}
-              placeholder="1-21"
-              className="w-16 px-2 py-1 bg-[#0D0D0F] border border-[#27272A] rounded text-xs font-mono font-mono-data text-[#F4F4F5] focus:outline-none focus:border-[#71717A]"
-            />
-            <button
-              type="submit"
-              className="px-3 py-1 bg-[#E4E4E7] hover:bg-[#D4D4D8] text-[#09090B] font-semibold text-xs rounded transition-colors cursor-pointer"
-            >
-              Inspect IDOR
-            </button>
-          </form>
+        <div>
+          <h2 className="text-xl font-bold font-heading text-[#F4F4F5] flex items-center gap-2">
+            <User className="w-5 h-5 text-[#A1A1AA]" />
+            {profile?.role === "admin"
+              ? "Portal Administrasi Keamanan Jaringan"
+              : "Detail Profil Akademik Mahasiswa"}
+          </h2>
+          <p className="text-xs text-[#71717A] mt-0.5 font-mono font-mono-data">
+            Endpoint: /api/profile?id={profileId || "..."}
+          </p>
         </div>
 
         {/* Profile Card & Details */}
