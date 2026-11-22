@@ -17,8 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KEAMANAN JARINGAN 25 | Portal Kemjar",
-  description: "Portal Akademik & Riset Keamanan Jaringan",
+  title: "SIAKAD-Lite | Portal Akademik & Pentest Lab",
+  description: "Portal Akademik & Simulasi Penetration Testing SIAKAD-Lite",
 };
 
 export default function RootLayout({

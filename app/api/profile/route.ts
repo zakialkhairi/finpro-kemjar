@@ -23,24 +23,22 @@ export async function GET(request: NextRequest) {
     }
 
     // DELIBERATELY VULNERABLE TO IDOR (Insecure Direct Object Reference):
-    // Fetches the profile using query parameter 'id' directly without verifying
-    // if 'id' matches the logged-in session_user_id.
+    // Fetches the entire profile using query parameter 'id' directly without verifying
+    // if 'id' matches the logged-in session_user_id or role permissions.
     const user = db.prepare("SELECT * FROM users WHERE id = ?").get(id) as
       | User
       | undefined;
 
     if (!user) {
       return NextResponse.json(
-        { error: "Data mahasiswa tidak ditemukan." },
+        { error: "Data pengguna tidak ditemukan." },
         { status: 404 }
       );
     }
 
     return NextResponse.json({ user });
-  } catch (err: any) {
-    return NextResponse.json(
-      { error: err?.message || String(err) },
-      { status: 500 }
-    );
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

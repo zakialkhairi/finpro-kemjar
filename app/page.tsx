@@ -11,11 +11,15 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rawError, setRawError] = useState<string | null>(null);
+  const [lastExecutedQuery, setLastExecutedQuery] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setRawError(null);
+
+    // Compute expected query for instant feedback
+    const fallbackQuery = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
 
     try {
       const res = await fetch("/api/login", {
@@ -25,12 +29,19 @@ export default function LoginPage() {
       });
 
       const text = await res.text();
-      let data: { error?: string; user?: { id: number } } | null = null;
+      let data: {
+        error?: string;
+        executedQuery?: string;
+        user?: { id: number; role?: string };
+      } | null = null;
+
       try {
         data = text ? JSON.parse(text) : null;
       } catch {
-        // Response was not JSON (e.g. empty serverless 500 or HTML error)
+        // Non-JSON response
       }
+
+      setLastExecutedQuery(data?.executedQuery || fallbackQuery);
 
       if (!res.ok || !data || data.error || !data.user) {
         const errorMsg =
@@ -41,10 +52,11 @@ export default function LoginPage() {
         return;
       }
 
-      // If success, cookie is set automatically by the server response
+      // If success, cookies session_user_id & session_role are set automatically
       // Redirect to /dashboard?id=<user.id>
       router.push(`/dashboard?id=${data.user.id}`);
     } catch (err: unknown) {
+      setLastExecutedQuery(fallbackQuery);
       const errorMsg =
         err instanceof Error ? err.message : "Terjadi kesalahan koneksi ke server.";
       setRawError(errorMsg);
@@ -60,11 +72,11 @@ export default function LoginPage() {
           <div className="w-12 h-12 rounded-lg bg-[#18181B] border border-[#27272A] flex items-center justify-center mb-4">
             <Shield className="w-6 h-6 text-[#E4E4E7]" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#E4E4E7] font-heading">
-            KEAMANAN JARINGAN 25
+          <h1 className="text-2xl font-bold tracking-tight text-[#F4F4F5] font-heading">
+            SIAKAD-Lite
           </h1>
           <p className="text-sm text-[#A1A1AA] mt-1">
-            Portal Riset & Laboratorium Keamanan Jaringan
+            Portal Akademik & Pentest Lab
           </p>
         </div>
 
@@ -88,7 +100,7 @@ export default function LoginPage() {
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-2 font-heading">
               Username
             </label>
             <div className="relative">
@@ -101,13 +113,13 @@ export default function LoginPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Masukkan username"
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+                className="w-full pl-10 pr-4 py-2.5 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-2">
+            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-2 font-heading">
               Password
             </label>
             <div className="relative">
@@ -120,7 +132,7 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password"
                 required
-                className="w-full pl-10 pr-4 py-2.5 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+                className="w-full pl-10 pr-4 py-2.5 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
               />
             </div>
           </div>
@@ -142,6 +154,21 @@ export default function LoginPage() {
           </button>
         </form>
 
+        {/* Executed SQL Query Box (Pentest Demonstration) */}
+        {lastExecutedQuery && (
+          <div className="mt-6 p-3.5 rounded-lg bg-[#0D0D0F] border border-[#27272A]">
+            <div className="flex items-center gap-1.5 text-xs text-[#A1A1AA] font-mono font-mono-data mb-1.5">
+              <Terminal className="w-3.5 h-3.5 text-[#A1A1AA]" />
+              <span className="uppercase tracking-wider text-[11px] font-semibold text-[#A1A1AA]">
+                Executed SQL Query:
+              </span>
+            </div>
+            <pre className="text-xs font-mono font-mono-data text-[#F4F4F5] bg-[#141416] p-2.5 rounded border border-[#27272A] overflow-x-auto whitespace-pre-wrap break-all select-all">
+              {lastExecutedQuery}
+            </pre>
+          </div>
+        )}
+
         {/* Footer Link to Register */}
         <div className="mt-8 pt-6 border-t border-[#27272A] text-center">
           <p className="text-xs text-[#71717A]">
@@ -158,7 +185,7 @@ export default function LoginPage() {
         {/* Security Lab Badge */}
         <div className="mt-6 flex items-center justify-center gap-1.5 text-[11px] text-[#52525B] font-mono font-mono-data">
           <Terminal className="w-3.5 h-3.5 text-[#52525B]" />
-          <span>Kemjar FTUI Security Lab Environment</span>
+          <span>SIAKAD-Lite Security Lab Environment</span>
         </div>
       </div>
     </main>

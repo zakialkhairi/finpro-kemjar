@@ -86,11 +86,11 @@ export default function RegisterPage() {
           <div className="w-12 h-12 rounded-lg bg-[#18181B] border border-[#27272A] flex items-center justify-center mb-3">
             <UserPlus className="w-6 h-6 text-[#E4E4E7]" />
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[#E4E4E7] font-heading">
+          <h1 className="text-2xl font-bold tracking-tight text-[#F4F4F5] font-heading">
             Registrasi Mahasiswa
           </h1>
           <p className="text-xs text-[#A1A1AA] mt-1">
-            Buat akun baru untuk portal akademik & riset keamanan jaringan
+            Buat akun baru untuk portal SIAKAD-Lite
           </p>
         </div>
 
@@ -122,7 +122,7 @@ export default function RegisterPage() {
         {/* Registration Form */}
         <form onSubmit={handleRegister} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5 font-heading">
               Nama Lengkap
             </label>
             <div className="relative">
@@ -136,13 +136,13 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="Contoh: Muhammad Budi"
                 required
-                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5 font-heading">
               Nomor Induk Mahasiswa (NIM)
             </label>
             <div className="relative">
@@ -156,14 +156,14 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="Contoh: 2406432000"
                 required
-                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5 font-heading">
                 Username
               </label>
               <input
@@ -173,30 +173,28 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 placeholder="username"
                 required
-                className="w-full px-3.5 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+                className="w-full px-3.5 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5 font-heading">
                 Password
               </label>
-              <div className="relative">
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="••••••••"
-                  required
-                  className="w-full px-3.5 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
-                />
-              </div>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+                className="w-full px-3.5 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data"
+              />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-medium text-[#A1A1AA] uppercase tracking-wider mb-1.5 font-heading">
               Catatan Rahasia (Secret Note)
             </label>
             <div className="relative">
@@ -209,7 +207,7 @@ export default function RegisterPage() {
                 onChange={handleChange}
                 rows={2}
                 placeholder="Catatan rahasia / credential pribadi"
-                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#E4E4E7] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data resize-none"
+                className="w-full pl-10 pr-4 py-2 bg-[#0D0D0F] border border-[#27272A] rounded-lg text-sm text-[#F4F4F5] placeholder-[#52525B] focus:outline-none focus:border-[#71717A] transition-colors font-mono font-mono-data resize-none"
               />
             </div>
             <p className="text-[11px] text-[#71717A] mt-1 font-mono font-mono-data">

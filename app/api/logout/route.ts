@@ -11,5 +11,10 @@ export async function POST() {
     expires: new Date(0),
   });
 
+  response.cookies.set("session_role", "", {
+    path: "/",
+    expires: new Date(0),
+  });
+
   return response;
 }

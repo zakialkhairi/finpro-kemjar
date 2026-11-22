@@ -13,9 +13,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const defaultSemesterGpas = JSON.stringify({
+      sem1: "3.80",
+      sem2: "3.84",
+      sem3: "3.86",
+      sem4: "3.90",
+    });
+
     const insertStmt = db.prepare(`
-      INSERT INTO users (username, password, full_name, nim, gpa, role, secret_note)
-      VALUES (?, ?, ?, ?, '3.50', 'mahasiswa', ?)
+      INSERT INTO users (username, password, full_name, nim, gpa, semester_gpas, role, secret_note)
+      VALUES (?, ?, ?, ?, '3.85', ?, 'mahasiswa', ?)
     `);
 
     const result = insertStmt.run(
@@ -23,7 +30,8 @@ export async function POST(request: NextRequest) {
       password,
       full_name,
       nim,
-      secret_note || ""
+      defaultSemesterGpas,
+      secret_note || "Tidak ada catatan rahasia."
     );
 
     return NextResponse.json({
@@ -31,16 +39,14 @@ export async function POST(request: NextRequest) {
       message: "Akun berhasil didaftarkan.",
       userId: result.lastInsertRowid,
     });
-  } catch (err: any) {
-    if (err?.message?.includes("UNIQUE constraint failed")) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
+    if (errorMsg.includes("UNIQUE constraint failed")) {
       return NextResponse.json(
         { error: "Username sudah digunakan. Silakan gunakan username lain." },
         { status: 400 }
       );
     }
-    return NextResponse.json(
-      { error: err?.message || String(err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
