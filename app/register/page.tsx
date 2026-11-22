@@ -90,7 +90,7 @@ export default function RegisterPage() {
             Registrasi Mahasiswa
           </h1>
           <p className="text-xs text-[#A1A1AA] mt-1">
-            Buat akun baru untuk portal SIAKAD-Lite
+            Buat akun baru untuk portal Keamanan Jaringan 25
           </p>
         </div>
 

@@ -73,10 +73,10 @@ export default function LoginPage() {
             <Shield className="w-6 h-6 text-[#E4E4E7]" />
           </div>
           <h1 className="text-2xl font-bold tracking-tight text-[#F4F4F5] font-heading">
-            SIAKAD-Lite
+            KEAMANAN JARINGAN 25
           </h1>
           <p className="text-sm text-[#A1A1AA] mt-1">
-            Portal Akademik & Pentest Lab
+            Portal Riset & Laboratorium Keamanan Jaringan
           </p>
         </div>
 
@@ -185,7 +185,7 @@ export default function LoginPage() {
         {/* Security Lab Badge */}
         <div className="mt-6 flex items-center justify-center gap-1.5 text-[11px] text-[#52525B] font-mono font-mono-data">
           <Terminal className="w-3.5 h-3.5 text-[#52525B]" />
-          <span>SIAKAD-Lite Security Lab Environment</span>
+          <span>Keamanan Jaringan 25 Security Lab Environment</span>
         </div>
       </div>
     </main>

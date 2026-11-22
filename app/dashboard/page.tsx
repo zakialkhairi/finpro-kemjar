@@ -215,7 +215,7 @@ function DashboardContent() {
             </div>
             <div>
               <span className="font-heading font-bold text-base text-[#F4F4F5]">
-                SIAKAD-Lite
+                KEAMANAN JARINGAN 25
               </span>
               <span className="hidden sm:inline-block ml-2 text-xs text-[#71717A] border-l border-[#27272A] pl-2 font-mono font-mono-data">
                 Security Lab
@@ -257,7 +257,7 @@ function DashboardContent() {
             <h2 className="text-xl font-bold font-heading text-[#F4F4F5] flex items-center gap-2">
               <User className="w-5 h-5 text-[#A1A1AA]" />
               {profile?.role === "admin"
-                ? "Portal Administrasi SIAKAD"
+                ? "Portal Administrasi Keamanan Jaringan"
                 : "Detail Profil Akademik Mahasiswa"}
             </h2>
             <p className="text-xs text-[#71717A] mt-0.5 font-mono font-mono-data">
