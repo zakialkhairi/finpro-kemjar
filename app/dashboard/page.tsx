@@ -212,20 +212,6 @@ function DashboardContent() {
           </div>
 
           <div className="flex items-center gap-4">
-            {profile && (
-              <div className="hidden md:flex items-center gap-2 text-xs text-[#A1A1AA] font-mono font-mono-data bg-[#0D0D0F] border border-[#27272A] px-3 py-1.5 rounded-md">
-                <span
-                  className={`w-2 h-2 rounded-full ${
-                    profile.role === "admin" ? "bg-rose-500" : "bg-emerald-500"
-                  }`}
-                ></span>
-                <span>User ID:</span>
-                <span className="text-[#F4F4F5] font-semibold">{profile.id}</span>
-                <span className="text-[#52525B]">|</span>
-                <span className="text-[#F4F4F5]">{profile.username}</span>
-              </div>
-            )}
-
             <button
               onClick={handleLogout}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-[#18181B] hover:bg-[#27272A] border border-[#27272A] text-xs font-semibold rounded-lg text-[#F4F4F5] transition-colors cursor-pointer"
