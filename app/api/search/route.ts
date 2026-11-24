@@ -16,11 +16,9 @@ export async function GET(request: NextRequest) {
       query: q,
       results,
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const errorMsg = err instanceof Error ? err.message : String(err);
     // Return raw SQLite error message for error-based SQLi / syntax feedback
-    return NextResponse.json(
-      { error: err?.message || String(err) },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
