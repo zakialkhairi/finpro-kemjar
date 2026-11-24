@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import {
   UserPlus,
   User,
-  KeyRound,
   IdCard,
   FileText,
   AlertCircle,
@@ -28,7 +27,7 @@ export default function RegisterPage() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -60,19 +59,26 @@ export default function RegisterPage() {
       if (!res.ok || !data || data.error) {
         setErrorMessage(
           data?.error ||
-          (text.trim() ? text : `HTTP ${res.status}: Gagal memproses pendaftaran.`)
+            (text.trim()
+              ? text
+              : `HTTP ${res.status}: Gagal memproses pendaftaran.`),
         );
         setIsLoading(false);
         return;
       }
 
-      setSuccessMessage("Pendaftaran berhasil! Mengalihkan ke halaman login...");
+      setSuccessMessage(
+        "Pendaftaran berhasil! Mengalihkan ke halaman login...",
+      );
+      setIsLoading(false);
       setTimeout(() => {
         router.push("/");
       }, 1500);
     } catch (err: unknown) {
       const errorMsg =
-        err instanceof Error ? err.message : "Terjadi kesalahan koneksi ke server.";
+        err instanceof Error
+          ? err.message
+          : "Terjadi kesalahan koneksi ke server.";
       setErrorMessage(errorMsg);
       setIsLoading(false);
     }

@@ -3,7 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Shield, Lock, User, AlertCircle, ArrowRight, Terminal } from "lucide-react";
+import {
+  Shield,
+  Lock,
+  User,
+  AlertCircle,
+  ArrowRight,
+  Terminal,
+} from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -11,7 +18,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [rawError, setRawError] = useState<string | null>(null);
-  const [lastExecutedQuery, setLastExecutedQuery] = useState<string | null>(null);
+  const [lastExecutedQuery, setLastExecutedQuery] = useState<string | null>(
+    null,
+  );
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,12 +62,19 @@ export default function LoginPage() {
       }
 
       // If success, cookies session_user_id & session_role are set automatically
-      // Redirect to /dashboard?id=<user.id>
+      // Reset state before redirecting to /dashboard?id=<user.id>
+      setIsLoading(false);
+      setUsername("");
+      setPassword("");
+      setLastExecutedQuery(null);
+      setRawError(null);
       router.push(`/dashboard?id=${data.user.id}`);
     } catch (err: unknown) {
       setLastExecutedQuery(fallbackQuery);
       const errorMsg =
-        err instanceof Error ? err.message : "Terjadi kesalahan koneksi ke server.";
+        err instanceof Error
+          ? err.message
+          : "Terjadi kesalahan koneksi ke server.";
       setRawError(errorMsg);
       setIsLoading(false);
     }
